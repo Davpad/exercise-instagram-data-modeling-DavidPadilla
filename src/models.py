@@ -15,7 +15,7 @@ class User(Base):
     username = Column(String(250), nullable=False)
     firstname = Column(String(250), nullable=False)
     lastname = Column(String(250), nullable=False)
-    email = Column(String(250), nullable=False)
+    email = Column(String(250), unique=True)
     comments = relationship('Comment', backref='user', lazy=True)
     posts = relationship('Post', backref='user', lazy=True)
     followers = relationship('Follower', backref='user', lazy=True)
@@ -26,7 +26,7 @@ class Post(Base):
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship('User', backref='user', lazy=True)
     comments = relationship('Comment', backref='comment', lazy=True)
     posts = relationship('Media', backref='media', lazy=True)
@@ -38,8 +38,8 @@ class Comment(Base):
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     comment_text = Column(String(250))
-    author_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
+    author_id = Column(Integer, ForeignKey('user.id'))
+    post_id = Column(Integer, ForeignKey('post.id'))
 
 class Media(Base):
     __tablename__ = 'media'
@@ -48,15 +48,15 @@ class Media(Base):
     id = Column(Integer, primary_key=True)
     type = Column(String)
     url = Column(String(250))
-    post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
+    post_id = Column(Integer, ForeignKey('post.id'))
 
 class Follower(Base):
     __tablename__ = 'follower'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    user_from_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    user_to_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_from_id = Column(Integer, ForeignKey('user.id'))
+    user_to_id = Column(Integer, ForeignKey('user.id'))
 
 
     def to_dict(self):
